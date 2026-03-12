@@ -2,3 +2,12 @@ node_modules/
 dist/
 .env
 *.local
+
+# Android build outputs
+android/app/build/
+android/.gradle/
+android/build/
+android/capacitor-android/build/
+android/capacitor-camera/build/
+android/capacitor-cordova-android-plugins/build/
+*.apk
