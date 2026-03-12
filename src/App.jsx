@@ -9,6 +9,7 @@ import ExpenseDetail from './pages/ExpenseDetail';
 import Onboarding from './pages/Onboarding';
 import RecurringExpenses from './pages/RecurringExpenses';
 import MonthlyReport from './pages/MonthlyReport';
+import PendingExpenses from './pages/PendingExpenses';
 
 // -------------------------------------------------------
 // App – Root Component
@@ -83,6 +84,7 @@ function AnimatedRoutes({ darkMode, setDarkMode, monthlyBudget, updateBudget }) 
         <Route path="/expense/:id" element={<ExpenseDetail darkMode={darkMode} />} />
         <Route path="/recurring" element={<RecurringExpenses darkMode={darkMode} />} />
         <Route path="/report" element={<MonthlyReport darkMode={darkMode} />} />
+        <Route path="/pending" element={<PendingExpenses darkMode={darkMode} />} />
       </Routes>
     </AnimatePresence>
   );

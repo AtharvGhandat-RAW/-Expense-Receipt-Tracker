@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '../services/supabaseClient';
+import { getPendingTransactions, scanForNewTransactions } from '../services/smsParser';
 import BottomNav from '../components/BottomNav';
 import PageTransition from '../components/PageTransition';
 
@@ -40,6 +41,17 @@ function Dashboard({ darkMode, monthlyBudget }) {
   // Search & filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
+
+  // Pending SMS transactions count
+  const [pendingCount, setPendingCount] = useState(0);
+
+  // Auto-scan SMS on mount
+  useEffect(() => {
+    setPendingCount(getPendingTransactions().length);
+    scanForNewTransactions(7).then(() => {
+      setPendingCount(getPendingTransactions().length);
+    }).catch(() => {});
+  }, []);
 
   // Fetch + real-time
   useEffect(() => {
@@ -145,6 +157,31 @@ function Dashboard({ darkMode, monthlyBudget }) {
             </div>
           )}
         </motion.div>
+
+        {/* Pending SMS Banner */}
+        {pendingCount > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.05 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => navigate('/pending')}
+            className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 rounded-xl p-3.5 flex items-center gap-3 cursor-pointer"
+          >
+            <span className="text-2xl">📱</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-red-700 dark:text-red-300">
+                {pendingCount} new transaction{pendingCount > 1 ? 's' : ''} detected
+              </p>
+              <p className="text-xs text-red-500 dark:text-red-400">
+                Tap to review & approve from SMS
+              </p>
+            </div>
+            <svg className="w-5 h-5 text-red-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </motion.div>
+        )}
 
         {/* Search Bar */}
         <motion.div
