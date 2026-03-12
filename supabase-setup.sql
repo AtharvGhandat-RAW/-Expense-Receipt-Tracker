@@ -75,3 +75,31 @@ create policy "Allow public read receipts"
 -- 6. Enable Realtime on the expenses table
 -- ─────────────────────────────────────────────────────────
 alter publication supabase_realtime add table public.expenses;
+
+
+-- =========================================================
+-- 7. Recurring Expenses (Subscriptions) table
+-- =========================================================
+create table if not exists public.recurring_expenses (
+  id              bigint generated always as identity primary key,
+  name            text not null,
+  amount          double precision not null,
+  category        text not null default 'Bills',
+  frequency       text not null default 'monthly',  -- monthly | weekly | yearly
+  is_active       boolean not null default true,
+  created_at      timestamptz not null default now()
+);
+
+alter table public.recurring_expenses enable row level security;
+
+create policy "Allow public read recurring"
+  on public.recurring_expenses for select using (true);
+
+create policy "Allow public insert recurring"
+  on public.recurring_expenses for insert with check (true);
+
+create policy "Allow public update recurring"
+  on public.recurring_expenses for update using (true) with check (true);
+
+create policy "Allow public delete recurring"
+  on public.recurring_expenses for delete using (true);

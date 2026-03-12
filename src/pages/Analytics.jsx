@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabaseClient';
 import BottomNav from '../components/BottomNav';
 
@@ -23,6 +24,7 @@ const CATEGORY_META = {
 };
 
 function Analytics() {
+  const navigate = useNavigate();
   const [expenses, setExpenses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -183,6 +185,14 @@ function Analytics() {
                 </div>
               </div>
             )}
+
+            {/* Monthly Report link */}
+            <button
+              onClick={() => navigate('/report')}
+              className="w-full h-12 rounded-full border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 font-medium flex items-center justify-center gap-2 active:bg-blue-50 dark:active:bg-blue-900/20 transition-colors"
+            >
+              📅 View Monthly Report
+            </button>
           </>
         )}
       </main>

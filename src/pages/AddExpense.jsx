@@ -27,7 +27,7 @@ function AddExpense({ darkMode }) {
   const [receiptPhoto, setReceiptPhoto] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Open device camera or file picker on desktop
+  // Open device camera
   const takePhoto = async () => {
     try {
       const photo = await Camera.getPhoto({
@@ -38,6 +38,20 @@ function AddExpense({ darkMode }) {
       setReceiptPhoto(photo.dataUrl);
     } catch (error) {
       console.log('Camera cancelled or error:', error);
+    }
+  };
+
+  // Pick from gallery
+  const pickFromGallery = async () => {
+    try {
+      const photo = await Camera.getPhoto({
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Photos,
+        quality: 80,
+      });
+      setReceiptPhoto(photo.dataUrl);
+    } catch (error) {
+      console.log('Gallery cancelled or error:', error);
     }
   };
 
@@ -171,14 +185,23 @@ function AddExpense({ darkMode }) {
           />
         </div>
 
-        {/* Snap Receipt */}
-        <button
-          type="button"
-          onClick={takePhoto}
-          className="w-full h-14 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-gray-500 dark:text-gray-400 text-sm font-medium flex items-center justify-center gap-2 active:bg-gray-100 dark:active:bg-gray-800 transition-colors"
-        >
-          📷 Snap Receipt
-        </button>
+        {/* Receipt buttons */}
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={takePhoto}
+            className="h-14 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-gray-500 dark:text-gray-400 text-sm font-medium flex items-center justify-center gap-2 active:bg-gray-100 dark:active:bg-gray-800 transition-colors"
+          >
+            📷 Camera
+          </button>
+          <button
+            type="button"
+            onClick={pickFromGallery}
+            className="h-14 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-gray-500 dark:text-gray-400 text-sm font-medium flex items-center justify-center gap-2 active:bg-gray-100 dark:active:bg-gray-800 transition-colors"
+          >
+            🖼️ Gallery
+          </button>
+        </div>
 
         {/* Photo Preview */}
         {receiptPhoto && (

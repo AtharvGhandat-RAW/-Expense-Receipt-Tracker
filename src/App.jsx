@@ -6,6 +6,8 @@ import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import ExpenseDetail from './pages/ExpenseDetail';
 import Onboarding from './pages/Onboarding';
+import RecurringExpenses from './pages/RecurringExpenses';
+import MonthlyReport from './pages/MonthlyReport';
 
 // -------------------------------------------------------
 // App – Root Component
@@ -68,6 +70,8 @@ function App() {
           />
         } />
         <Route path="/expense/:id" element={<ExpenseDetail darkMode={darkMode} />} />
+        <Route path="/recurring" element={<RecurringExpenses darkMode={darkMode} />} />
+        <Route path="/report" element={<MonthlyReport darkMode={darkMode} />} />
       </Routes>
     </BrowserRouter>
   );
