@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../services/supabaseClient';
 import BottomNav from '../components/BottomNav';
+import PageTransition from '../components/PageTransition';
 
 // -------------------------------------------------------
 // RecurringExpenses – Subscriptions & Bills Tracker
@@ -115,15 +117,21 @@ function RecurringExpenses() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F4F5] dark:bg-gray-950 flex flex-col">
+    <PageTransition>
+    <div className="h-full bg-[#F4F4F5] dark:bg-gray-950 flex flex-col">
       {/* Top App Bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white dark:bg-gray-900 w-full flex items-center px-4 shadow-sm">
+      <header className="h-16 bg-white dark:bg-gray-900 w-full flex items-center px-4 shadow-sm shrink-0 z-10">
         <h1 className="text-[22px] font-medium text-gray-900 dark:text-white">Subscriptions</h1>
       </header>
 
-      <main className="flex-1 px-4 pt-20 pb-24 space-y-4">
+      <main className="flex-1 native-scroll px-4 pt-4 pb-24 space-y-4">
         {/* Monthly projection card */}
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-5 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-5 text-center"
+        >
           <p className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide">
             Monthly Recurring Total
           </p>
@@ -133,18 +141,31 @@ function RecurringExpenses() {
           <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
             {items.filter((i) => i.is_active).length} active subscription{items.filter((i) => i.is_active).length !== 1 ? 's' : ''}
           </p>
-        </div>
+        </motion.div>
 
         {/* Add Button or Form */}
+        <AnimatePresence mode="wait">
         {!showForm ? (
-          <button
+          <motion.button
+            key="add-btn"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setShowForm(true)}
             className="w-full h-12 rounded-full border-2 border-dashed border-blue-300 dark:border-blue-700 text-blue-600 dark:text-blue-400 text-sm font-medium flex items-center justify-center gap-2 active:bg-blue-50 dark:active:bg-blue-900/20 transition-colors"
           >
             + Add Subscription
-          </button>
+          </motion.button>
         ) : (
-          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 space-y-3">
+          <motion.div
+            key="add-form"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 space-y-3"
+          >
             <input
               type="text"
               placeholder="Name (e.g. Netflix, Rent)"
@@ -199,8 +220,9 @@ function RecurringExpenses() {
                 {isSaving ? 'Adding...' : 'Add'}
               </button>
             </div>
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
 
         {/* Section heading */}
         <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide pt-1">
@@ -224,12 +246,15 @@ function RecurringExpenses() {
 
         {/* Subscription cards */}
         {!isLoading &&
-          items.map((item) => {
+          items.map((item, index) => {
             const emoji = CATEGORY_EMOJIS[item.category] || '💰';
             const freqLabel = FREQUENCY_OPTIONS.find((f) => f.value === item.frequency)?.label || item.frequency;
             return (
-              <div
+              <motion.div
                 key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: Math.min(index * 0.05, 0.4), ease: 'easeOut' }}
                 className={`bg-white dark:bg-gray-900 rounded-xl border p-4 flex items-center gap-4 transition-opacity ${
                   item.is_active
                     ? 'border-gray-100 dark:border-gray-800'
@@ -276,13 +301,14 @@ function RecurringExpenses() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                 </button>
-              </div>
+              </motion.div>
             );
           })}
       </main>
 
       <BottomNav />
     </div>
+    </PageTransition>
   );
 }
 

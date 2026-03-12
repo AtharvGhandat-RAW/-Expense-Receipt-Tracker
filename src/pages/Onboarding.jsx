@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // -------------------------------------------------------
 // Onboarding – Welcome flow for first-time users
@@ -39,17 +40,35 @@ function Onboarding({ onFinish }) {
   const slide = slides[current];
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-8 text-center">
-      {/* Animated emoji */}
-      <div className="text-8xl mb-8 animate-bounce">{slide.emoji}</div>
+    <div className="h-full bg-white flex flex-col items-center justify-center px-8 text-center">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={current}
+          initial={{ opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -60 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+          className="flex flex-col items-center"
+        >
+          {/* Animated emoji */}
+          <motion.div
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.15, type: 'spring', stiffness: 200, damping: 15 }}
+            className="text-8xl mb-8"
+          >
+            {slide.emoji}
+          </motion.div>
 
-      {/* Title */}
-      <h1 className="text-2xl font-bold text-gray-900 mb-3">{slide.title}</h1>
+          {/* Title */}
+          <h1 className="text-2xl font-bold text-gray-900 mb-3">{slide.title}</h1>
 
-      {/* Description */}
-      <p className="text-base text-gray-500 max-w-xs leading-relaxed mb-10">
-        {slide.description}
-      </p>
+          {/* Description */}
+          <p className="text-base text-gray-500 max-w-xs leading-relaxed mb-10">
+            {slide.description}
+          </p>
+        </motion.div>
+      </AnimatePresence>
 
       {/* Dots indicator */}
       <div className="flex gap-2 mb-8">
@@ -65,20 +84,22 @@ function Onboarding({ onFinish }) {
 
       {/* Action buttons */}
       <div className="w-full max-w-xs space-y-3">
-        <button
+        <motion.button
+          whileTap={{ scale: 0.95 }}
           onClick={next}
-          className="w-full h-12 rounded-full bg-blue-600 text-white font-medium shadow-md active:bg-blue-700 active:scale-[0.98] transition-all"
+          className="w-full h-12 rounded-full bg-blue-600 text-white font-medium shadow-md"
         >
           {current < slides.length - 1 ? 'Next' : 'Get Started'}
-        </button>
+        </motion.button>
 
         {current < slides.length - 1 && (
-          <button
+          <motion.button
+            whileTap={{ scale: 0.95 }}
             onClick={onFinish}
-            className="w-full h-12 rounded-full text-gray-500 font-medium active:bg-gray-100 transition-colors"
+            className="w-full h-12 rounded-full text-gray-500 font-medium"
           >
             Skip
-          </button>
+          </motion.button>
         )}
       </div>
     </div>

@@ -9,10 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "^8.0.0",
     "@capacitor/camera": "^8.0.2",
     "@capacitor/core": "^8.2.0",
-    "@capacitor/android": "^8.0.0",
     "@supabase/supabase-js": "^2.99.1",
+    "framer-motion": "^12.35.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.13.1"

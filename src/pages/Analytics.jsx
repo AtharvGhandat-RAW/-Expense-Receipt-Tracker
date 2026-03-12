@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { supabase } from '../services/supabaseClient';
 import BottomNav from '../components/BottomNav';
+import PageTransition from '../components/PageTransition';
 
 // -------------------------------------------------------
 // Analytics – Spending breakdown & insights
@@ -76,13 +78,14 @@ function Analytics() {
   const maxDay = Math.max(...last7.map((d) => d.amount), 1);
 
   return (
-    <div className="min-h-screen bg-[#F4F4F5] dark:bg-gray-950 flex flex-col">
+    <PageTransition>
+    <div className="h-full bg-[#F4F4F5] dark:bg-gray-950 flex flex-col">
       {/* Top App Bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white dark:bg-gray-900 w-full flex items-center px-4 shadow-sm">
+      <header className="h-16 bg-white dark:bg-gray-900 w-full flex items-center px-4 shadow-sm shrink-0 z-10">
         <h1 className="text-[22px] font-medium text-gray-900 dark:text-white">Analytics</h1>
       </header>
 
-      <main className="flex-1 px-4 pt-20 pb-24 space-y-4">
+      <main className="flex-1 native-scroll px-4 pt-4 pb-24 space-y-4">
         {isLoading ? (
           <p className="text-center text-gray-400 py-12 text-sm">Loading...</p>
         ) : expenses.length === 0 ? (
@@ -95,7 +98,12 @@ function Analytics() {
         ) : (
           <>
             {/* Quick Stats Row */}
-            <div className="grid grid-cols-3 gap-3">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+              className="grid grid-cols-3 gap-3"
+            >
               <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-3 text-center">
                 <p className="text-xs text-gray-500 dark:text-gray-400">Total</p>
                 <p className="text-lg font-bold text-blue-600 dark:text-blue-400">₹{totalSpend.toLocaleString('en-IN')}</p>
@@ -108,10 +116,15 @@ function Analytics() {
                 <p className="text-xs text-gray-500 dark:text-gray-400">Entries</p>
                 <p className="text-lg font-bold text-purple-600 dark:text-purple-400">{totalCount}</p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Category Breakdown */}
-            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
+              className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4"
+            >
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
                 Spending by Category
               </h3>
@@ -141,10 +154,15 @@ function Analytics() {
                     );
                   })}
               </div>
-            </div>
+            </motion.div>
 
             {/* 7-Day Timeline */}
-            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
+              className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4"
+            >
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
                 Last 7 Days
               </h3>
@@ -169,11 +187,16 @@ function Analytics() {
                   );
                 })}
               </div>
-            </div>
+            </motion.div>
 
             {/* Top Category Insight */}
             {topCategory && (
-              <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4 flex items-center gap-3">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
+                className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4 flex items-center gap-3"
+              >
                 <span className="text-3xl">{(CATEGORY_META[topCategory[0]] || CATEGORY_META.Other).emoji}</span>
                 <div>
                   <p className="text-sm font-medium text-blue-800 dark:text-blue-300">
@@ -183,22 +206,27 @@ function Analytics() {
                     ₹{topCategory[1].toLocaleString('en-IN')} ({Math.round((topCategory[1] / totalSpend) * 100)}% of total)
                   </p>
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {/* Monthly Report link */}
-            <button
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.35, ease: 'easeOut' }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => navigate('/report')}
-              className="w-full h-12 rounded-full border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 font-medium flex items-center justify-center gap-2 active:bg-blue-50 dark:active:bg-blue-900/20 transition-colors"
+              className="w-full h-12 rounded-full border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 font-medium flex items-center justify-center gap-2"
             >
               📅 View Monthly Report
-            </button>
+            </motion.button>
           </>
         )}
       </main>
 
       <BottomNav />
     </div>
+    </PageTransition>
   );
 }
 

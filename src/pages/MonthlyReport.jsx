@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { supabase } from '../services/supabaseClient';
+import PageTransition from '../components/PageTransition';
 
 // -------------------------------------------------------
 // MonthlyReport – Month-by-month spending breakdown
@@ -94,22 +96,24 @@ function MonthlyReport() {
     .slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-[#F4F4F5] dark:bg-gray-950 flex flex-col">
+    <PageTransition>
+    <div className="h-full bg-[#F4F4F5] dark:bg-gray-950 flex flex-col">
       {/* Top App Bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white dark:bg-gray-900 w-full flex items-center px-4 shadow-sm gap-3">
-        <button
+      <header className="h-16 bg-white dark:bg-gray-900 w-full flex items-center px-4 shadow-sm gap-3 shrink-0 z-10">
+        <motion.button
+          whileTap={{ scale: 0.85 }}
           onClick={() => navigate(-1)}
-          className="w-10 h-10 rounded-full flex items-center justify-center active:bg-gray-100 dark:active:bg-gray-800 transition-colors"
+          className="w-10 h-10 rounded-full flex items-center justify-center"
           aria-label="Go back"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-900 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
-        </button>
+        </motion.button>
         <h1 className="text-[22px] font-medium text-gray-900 dark:text-white">Monthly Report</h1>
       </header>
 
-      <main className="flex-1 px-4 pt-20 pb-10 space-y-4">
+      <main className="flex-1 native-scroll px-4 pt-4 pb-10 space-y-4">
         {/* Month Selector */}
         <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 flex items-center justify-between">
           <button
@@ -151,7 +155,12 @@ function MonthlyReport() {
         ) : (
           <>
             {/* Total + comparison */}
-            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-5 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+              className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-5 text-center"
+            >
               <p className="text-[36px] font-bold text-blue-600 dark:text-blue-400">
                 ₹{thisTotal.toLocaleString('en-IN')}
               </p>
@@ -163,10 +172,15 @@ function MonthlyReport() {
               <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                 Daily avg: ₹{Math.round(dailyAvg).toLocaleString('en-IN')}
               </p>
-            </div>
+            </motion.div>
 
             {/* Donut Chart (SVG) */}
-            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
+              className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4"
+            >
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
                 Category Split
               </h3>
@@ -214,10 +228,15 @@ function MonthlyReport() {
                   })}
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Category Detail */}
-            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
+              className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4"
+            >
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
                 Breakdown
               </h3>
@@ -242,11 +261,16 @@ function MonthlyReport() {
                   );
                 })}
               </div>
-            </div>
+            </motion.div>
 
             {/* Top 3 Expenses */}
             {topExpenses.length > 0 && (
-              <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
+                className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4"
+              >
                 <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
                   Top Expenses
                 </h3>
@@ -274,12 +298,13 @@ function MonthlyReport() {
                     );
                   })}
                 </div>
-              </div>
+              </motion.div>
             )}
           </>
         )}
       </main>
     </div>
+    </PageTransition>
   );
 }
 

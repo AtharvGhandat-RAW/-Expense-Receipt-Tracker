@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../services/supabaseClient';
+import PageTransition from '../components/PageTransition';
 
 // -------------------------------------------------------
 // ExpenseDetail – View / Edit / Delete an expense
@@ -89,7 +91,7 @@ function ExpenseDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F4F4F5] dark:bg-gray-950 flex items-center justify-center">
+      <div className="h-full bg-[#F4F4F5] dark:bg-gray-950 flex items-center justify-center">
         <p className="text-gray-400 text-sm">Loading...</p>
       </div>
     );
@@ -97,25 +99,27 @@ function ExpenseDetail() {
 
   if (!expense) {
     return (
-      <div className="min-h-screen bg-[#F4F4F5] dark:bg-gray-950 flex items-center justify-center">
+      <div className="h-full bg-[#F4F4F5] dark:bg-gray-950 flex items-center justify-center">
         <p className="text-gray-400 text-sm">Expense not found.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F4F5] dark:bg-gray-950 flex flex-col">
+    <PageTransition>
+    <div className="h-full bg-[#F4F4F5] dark:bg-gray-950 flex flex-col">
       {/* Top App Bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white dark:bg-gray-900 w-full flex items-center px-4 shadow-sm gap-3">
-        <button
+      <header className="h-16 bg-white dark:bg-gray-900 w-full flex items-center px-4 shadow-sm gap-3 shrink-0 z-10">
+        <motion.button
+          whileTap={{ scale: 0.85 }}
           onClick={() => navigate('/')}
-          className="w-10 h-10 rounded-full flex items-center justify-center active:bg-gray-100 dark:active:bg-gray-800 transition-colors"
+          className="w-10 h-10 rounded-full flex items-center justify-center"
           aria-label="Go back"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-900 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
-        </button>
+        </motion.button>
         <h1 className="text-[22px] font-medium text-gray-900 dark:text-white flex-1">Expense Detail</h1>
         {!isEditing && (
           <button
@@ -127,9 +131,14 @@ function ExpenseDetail() {
         )}
       </header>
 
-      <main className="flex-1 px-4 pt-20 pb-24 space-y-4">
+      <main className="flex-1 native-scroll px-4 pt-4 pb-24 space-y-4">
         {/* Amount Card */}
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-6 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-6 text-center"
+        >
           {isEditing ? (
             <input
               type="number"
@@ -143,10 +152,15 @@ function ExpenseDetail() {
             </p>
           )}
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{formatDate(expense.date)}</p>
-        </div>
+        </motion.div>
 
         {/* Details Card */}
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 space-y-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
+          className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 space-y-4"
+        >
           {/* Category */}
           <div>
             <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Category</p>
@@ -181,7 +195,7 @@ function ExpenseDetail() {
               </p>
             )}
           </div>
-        </div>
+        </motion.div>
 
         {/* Receipt Image */}
         {expense.receipt_image_url && (
@@ -235,9 +249,22 @@ function ExpenseDetail() {
       </main>
 
       {/* Delete Confirmation Modal */}
+      <AnimatePresence>
       {showDeleteConfirm && (
-        <div className="fixed inset-0 z-[100] bg-black/40 flex items-end justify-center p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-sm p-6 space-y-4 mb-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-[100] bg-black/40 flex items-end justify-center p-4"
+        >
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-sm p-6 space-y-4 mb-4"
+          >
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Delete this expense?</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               This action cannot be undone. The expense and any associated receipt will be permanently removed.
@@ -256,10 +283,12 @@ function ExpenseDetail() {
                 Delete
               </button>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
+    </PageTransition>
   );
 }
 

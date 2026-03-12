@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { supabase } from '../services/supabaseClient';
 import BottomNav from '../components/BottomNav';
+import PageTransition from '../components/PageTransition';
 
 // -------------------------------------------------------
 // Settings – Budget, Dark Mode, Export, About
@@ -70,15 +72,21 @@ function Settings({ darkMode, setDarkMode, monthlyBudget, setMonthlyBudget }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F4F5] dark:bg-gray-950 flex flex-col">
+    <PageTransition>
+    <div className="h-full bg-[#F4F4F5] dark:bg-gray-950 flex flex-col">
       {/* Top App Bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white dark:bg-gray-900 w-full flex items-center px-4 shadow-sm">
+      <header className="h-16 bg-white dark:bg-gray-900 w-full flex items-center px-4 shadow-sm shrink-0 z-10">
         <h1 className="text-[22px] font-medium text-gray-900 dark:text-white">Settings</h1>
       </header>
 
-      <main className="flex-1 px-4 pt-20 pb-24 space-y-4">
+      <main className="flex-1 native-scroll px-4 pt-4 pb-24 space-y-4">
         {/* ── Dark Mode Toggle ─────────────────────── */}
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 flex items-center justify-between">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+          className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 flex items-center justify-between"
+        >
           <div>
             <p className="text-base font-medium text-gray-900 dark:text-white">Dark Mode</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">Toggle dark theme</p>
@@ -97,10 +105,15 @@ function Settings({ darkMode, setDarkMode, monthlyBudget, setMonthlyBudget }) {
               }`}
             />
           </button>
-        </div>
+        </motion.div>
 
         {/* ── Monthly Budget ───────────────────────── */}
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 space-y-3">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.08, ease: 'easeOut' }}
+          className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 space-y-3"
+        >
           <div>
             <p className="text-base font-medium text-gray-900 dark:text-white">Monthly Budget</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">Get warned when approaching your limit</p>
@@ -126,10 +139,15 @@ function Settings({ darkMode, setDarkMode, monthlyBudget, setMonthlyBudget }) {
               Current budget: ₹{monthlyBudget.toLocaleString('en-IN')}/month
             </p>
           )}
-        </div>
+        </motion.div>
 
         {/* ── Export CSV ───────────────────────────── */}
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.16, ease: 'easeOut' }}
+          className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4"
+        >
           <div className="mb-3">
             <p className="text-base font-medium text-gray-900 dark:text-white">Export Data</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">Download all expenses as a CSV file</p>
@@ -145,10 +163,15 @@ function Settings({ darkMode, setDarkMode, monthlyBudget, setMonthlyBudget }) {
           >
             {isExporting ? 'Exporting...' : '📥 Export as CSV'}
           </button>
-        </div>
+        </motion.div>
 
         {/* ── Reset Onboarding ─────────────────────── */}
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.24, ease: 'easeOut' }}
+          className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4"
+        >
           <div className="mb-3">
             <p className="text-base font-medium text-gray-900 dark:text-white">Reset Onboarding</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">Show the welcome walkthrough again</p>
@@ -159,20 +182,26 @@ function Settings({ darkMode, setDarkMode, monthlyBudget, setMonthlyBudget }) {
           >
             Reset
           </button>
-        </div>
+        </motion.div>
 
         {/* ── About ────────────────────────────────── */}
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.32, ease: 'easeOut' }}
+          className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 text-center"
+        >
           <p className="text-lg font-bold text-gray-900 dark:text-white">Expense Tracker</p>
           <p className="text-sm text-gray-500 dark:text-gray-400">v1.0.0</p>
           <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
             Built with React + Tailwind + Supabase + Capacitor
           </p>
-        </div>
+        </motion.div>
       </main>
 
       <BottomNav />
     </div>
+    </PageTransition>
   );
 }
 

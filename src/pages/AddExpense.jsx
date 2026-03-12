@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { supabase } from '../services/supabaseClient';
+import PageTransition from '../components/PageTransition';
 
 // -------------------------------------------------------
 // AddExpense – Form Screen (Material Design 3)
@@ -115,25 +117,31 @@ function AddExpense({ darkMode }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F4F5] dark:bg-gray-950 flex flex-col">
+    <PageTransition>
+    <div className="h-full bg-[#F4F4F5] dark:bg-gray-950 flex flex-col">
       {/* M3 Top App Bar with back arrow */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white dark:bg-gray-900 w-full flex items-center px-4 shadow-sm gap-3">
-        <button
+      <header className="h-16 bg-white dark:bg-gray-900 w-full flex items-center px-4 shadow-sm gap-3 shrink-0 z-10">
+        <motion.button
+          whileTap={{ scale: 0.85 }}
           onClick={() => navigate('/')}
-          className="w-10 h-10 rounded-full flex items-center justify-center active:bg-gray-100 dark:active:bg-gray-800 transition-colors"
+          className="w-10 h-10 rounded-full flex items-center justify-center"
           aria-label="Go back"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-900 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
-        </button>
+        </motion.button>
         <h1 className="text-[22px] font-medium text-gray-900 dark:text-white">Add Expense</h1>
       </header>
 
       {/* Form */}
-      <main className="flex-1 px-4 pt-20 pb-24 space-y-5">
+      <main className="flex-1 native-scroll px-4 pt-4 pb-24 space-y-5">
         {/* Amount */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+        >
           <label htmlFor="amount" className="block text-sm text-gray-600 dark:text-gray-400 mb-1.5">
             Amount (₹)
           </label>
@@ -146,16 +154,21 @@ function AddExpense({ darkMode }) {
             onChange={(e) => setAmount(e.target.value)}
             className="w-full h-14 bg-transparent border border-gray-400 dark:border-gray-600 rounded-md px-4 text-base text-gray-900 dark:text-white placeholder-gray-400 focus:border-blue-600 focus:border-2 focus:outline-none transition-colors"
           />
-        </div>
+        </motion.div>
 
         {/* Category – Chip Grid */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.08, ease: 'easeOut' }}
+        >
           <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">Category</label>
           <div className="grid grid-cols-4 gap-2">
             {CATEGORIES.map((cat) => (
-              <button
+              <motion.button
                 key={cat.value}
                 type="button"
+                whileTap={{ scale: 0.9 }}
                 onClick={() => setCategory(cat.value)}
                 className={`flex flex-col items-center gap-1 py-3 rounded-xl text-xs font-medium transition-all ${
                   category === cat.value
@@ -165,13 +178,17 @@ function AddExpense({ darkMode }) {
               >
                 <span className="text-xl">{cat.emoji}</span>
                 {cat.value}
-              </button>
+              </motion.button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Notes */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.16, ease: 'easeOut' }}
+        >
           <label htmlFor="notes" className="block text-sm text-gray-600 dark:text-gray-400 mb-1.5">
             Notes
           </label>
@@ -183,10 +200,15 @@ function AddExpense({ darkMode }) {
             onChange={(e) => setNotes(e.target.value)}
             className="w-full bg-transparent border border-gray-400 dark:border-gray-600 rounded-md px-4 py-3 text-base text-gray-900 dark:text-white placeholder-gray-400 focus:border-blue-600 focus:border-2 focus:outline-none transition-colors resize-none"
           />
-        </div>
+        </motion.div>
 
         {/* Receipt buttons */}
-        <div className="grid grid-cols-2 gap-3">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.24, ease: 'easeOut' }}
+          className="grid grid-cols-2 gap-3"
+        >
           <button
             type="button"
             onClick={takePhoto}
@@ -201,11 +223,18 @@ function AddExpense({ darkMode }) {
           >
             🖼️ Gallery
           </button>
-        </div>
+        </motion.div>
 
         {/* Photo Preview */}
+        <AnimatePresence>
         {receiptPhoto && (
-          <div className="relative">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="relative"
+          >
             <img
               src={receiptPhoto}
               alt="Receipt preview"
@@ -218,26 +247,34 @@ function AddExpense({ darkMode }) {
             >
               ×
             </button>
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </main>
 
       {/* Save button */}
-      <div className="fixed bottom-0 left-0 right-0 px-4 pb-6 pt-3 bg-gradient-to-t from-[#F4F4F5] dark:from-gray-950 via-[#F4F4F5] dark:via-gray-950 to-transparent">
-        <button
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.4, ease: 'easeOut' }}
+        className="px-4 pb-6 pt-3 bg-gradient-to-t from-[#F4F4F5] dark:from-gray-950 via-[#F4F4F5] dark:via-gray-950 to-transparent shrink-0"
+      >
+        <motion.button
+          whileTap={{ scale: 0.95 }}
           type="button"
           onClick={handleSaveExpense}
           disabled={isSubmitting}
           className={`w-full h-12 rounded-full font-medium shadow-md transition-all ${
             isSubmitting
               ? 'bg-blue-300 text-blue-100 cursor-not-allowed'
-              : 'bg-blue-600 text-white active:bg-blue-700 active:scale-[0.98]'
+              : 'bg-blue-600 text-white'
           }`}
         >
           {isSubmitting ? 'Saving...' : 'Save Expense'}
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
     </div>
+    </PageTransition>
   );
 }
 

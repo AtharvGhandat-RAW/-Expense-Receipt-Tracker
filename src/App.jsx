@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import Dashboard from './pages/Dashboard';
 import AddExpense from './pages/AddExpense';
 import Analytics from './pages/Analytics';
@@ -57,7 +58,17 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
+      <AnimatedRoutes darkMode={darkMode} setDarkMode={setDarkMode} monthlyBudget={monthlyBudget} updateBudget={updateBudget} />
+    </BrowserRouter>
+  );
+}
+
+function AnimatedRoutes({ darkMode, setDarkMode, monthlyBudget, updateBudget }) {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Dashboard darkMode={darkMode} monthlyBudget={monthlyBudget} />} />
         <Route path="/add" element={<AddExpense darkMode={darkMode} />} />
         <Route path="/analytics" element={<Analytics darkMode={darkMode} />} />
@@ -73,7 +84,7 @@ function App() {
         <Route path="/recurring" element={<RecurringExpenses darkMode={darkMode} />} />
         <Route path="/report" element={<MonthlyReport darkMode={darkMode} />} />
       </Routes>
-    </BrowserRouter>
+    </AnimatePresence>
   );
 }
 

@@ -3,7 +3,11 @@
   "appName": "Expense Tracker",
   "webDir": "dist",
   "android": {
-    "backgroundColor": "#F4F4F5"
+    "backgroundColor": "#F4F4F5",
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
   },
   "plugins": {
     "Camera": {

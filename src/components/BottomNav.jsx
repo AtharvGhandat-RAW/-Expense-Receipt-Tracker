@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 // -------------------------------------------------------
 // BottomNav – Android-style Material 3 Bottom Navigation
@@ -56,21 +57,26 @@ function BottomNav() {
       {tabs.map((tab) => {
         const isActive = location.pathname === tab.path;
         return (
-          <button
+          <motion.button
             key={tab.path}
+            whileTap={{ scale: 0.85 }}
             onClick={() => navigate(tab.path)}
             className={`flex flex-col items-center justify-center gap-0.5 w-20 py-1 rounded-2xl transition-colors ${
               isActive
                 ? 'text-blue-600 dark:text-blue-400'
-                : 'text-gray-400 dark:text-gray-500 active:text-gray-600'
+                : 'text-gray-400 dark:text-gray-500'
             }`}
           >
             {/* Active indicator pill */}
-            <div className={`px-5 py-1 rounded-full transition-colors ${isActive ? 'bg-blue-100 dark:bg-blue-900/40' : ''}`}>
+            <motion.div
+              layout
+              className={`px-5 py-1 rounded-full ${isActive ? 'bg-blue-100 dark:bg-blue-900/40' : ''}`}
+              transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+            >
               {tab.icon(isActive)}
-            </div>
+            </motion.div>
             <span className="text-xs font-medium">{tab.label}</span>
-          </button>
+          </motion.button>
         );
       })}
     </nav>
