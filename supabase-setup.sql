@@ -37,6 +37,19 @@ create policy "Allow public insert"
   for insert
   with check (true);
 
+-- UPDATE policy – anyone can update expenses
+create policy "Allow public update"
+  on public.expenses
+  for update
+  using (true)
+  with check (true);
+
+-- DELETE policy – anyone can delete expenses
+create policy "Allow public delete"
+  on public.expenses
+  for delete
+  using (true);
+
 
 -- 4. Create the "receipts" storage bucket (public)
 -- ─────────────────────────────────────────────────────────
