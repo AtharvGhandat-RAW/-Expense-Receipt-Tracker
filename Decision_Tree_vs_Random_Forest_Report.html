@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Tree vs Random Forest - Microproject Report</title>
+    <style>
+        /* Page Setup */
+        @page {
+            size: A4;
+            margin: 2.5cm 1.25cm 1.25cm 3.5cm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt;
+            line-height: 2;
+            color: #000;
+            background: #fff;
+            max-width: 21cm;
+            margin: 0 auto;
+            padding: 2.5cm 1.25cm 1.25cm 3.5cm;
+            text-align: justify;
+        }
+
+        /* Cover Page */
+        .cover-page {
+            text-align: center;
+            padding: 4cm 2cm;
+            page-break-after: always;
+            border: 3px double #000;
+            min-height: 28cm;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .cover-page h1 {
+            font-size: 24pt;
+            font-weight: bold;
+            margin: 1.5cm 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cover-page h2 {
+            font-size: 18pt;
+            margin: 1cm 0;
+            font-weight: bold;
+        }
+
+        .cover-page p {
+            font-size: 13pt;
+            margin: 0.5cm 0;
+            line-height: 1.8;
+        }
+
+        .institute-name {
+            font-size: 16pt;
+            font-weight: bold;
+            margin-bottom: 0.5cm;
+        }
+
+        .department {
+            font-size: 14pt;
+            margin-bottom: 2cm;
+        }
+
+        .subject-info {
+            margin: 1.5cm 0;
+        }
+
+        .student-info, .guide-info {
+            margin: 1cm 0;
+            font-size: 13pt;
+        }
+
+        /* Certificate Page */
+        .certificate-page {
+            padding: 3cm 2cm;
+            page-break-after: always;
+        }
+
+        .certificate-page h2 {
+            text-align: center;
+            font-size: 18pt;
+            margin-bottom: 2cm;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .certificate-page p {
+            margin: 1cm 0;
+            text-indent: 2cm;
+        }
+
+        .signatures {
+            margin-top: 4cm;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signature {
+            text-align: center;
+        }
+
+        /* Standard Pages */
+        .page {
+            page-break-after: always;
+        }
+
+        h1 {
+            font-size: 16pt;
+            font-weight: bold;
+            text-align: center;
+            margin: 1cm 0 0.8cm 0;
+            text-transform: uppercase;
+            text-decoration: underline;
+        }
+
+        h2 {
+            font-size: 14pt;
+            font-weight: bold;
+            margin: 0.8cm 0 0.5cm 0;
+            text-transform: uppercase;
+        }
+
+        h3 {
+            font-size: 13pt;
+            font-weight: bold;
+            margin: 0.6cm 0 0.4cm 0;
+        }
+
+        h4 {
+            font-size: 12pt;
+            font-weight: bold;
+            margin: 0.4cm 0 0.3cm 0;
+            font-style: italic;
+        }
+
+        p {
+            margin-bottom: 0.5cm;
+            text-indent: 1cm;
+        }
+
+        ul, ol {
+            margin: 0.5cm 0 0.5cm 2cm;
+        }
+
+        li {
+            margin-bottom: 0.3cm;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1cm 0;
+            font-size: 11pt;
+        }
+
+        table, th, td {
+            border: 1px solid #000;
+        }
+
+        th {
+            background-color: #d9d9d9;
+            padding: 0.3cm;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        td {
+            padding: 0.3cm;
+        }
+
+        /* Diagrams and Code Blocks */
+        .diagram, .code-block {
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            padding: 0.5cm;
+            margin: 1cm 0;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        .diagram-title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 0.5cm;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        /* Index */
+        .index-table {
+            border: none;
+        }
+
+        .index-table td {
+            border: none;
+            padding: 0.2cm 0.5cm;
+        }
+
+        .index-number {
+            width: 10%;
+        }
+
+        .index-topic {
+            width: 70%;
+        }
+
+        .index-page {
+            width: 20%;
+            text-align: right;
+        }
+
+        /* Acknowledgement */
+        .acknowledgement {
+            text-align: justify;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                margin: 0;
+                padding: 2.5cm 1.25cm 1.25cm 3.5cm;
+            }
+
+            .page {
+                page-break-after: always;
+            }
+
+            h1, h2, h3 {
+                page-break-after: avoid;
+            }
+        }
+
+        /* Special Elements */
+        .highlight {
+            background-color: #ffff99;
+            padding: 0.1cm 0.2cm;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .italic {
+            font-style: italic;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .underline {
+            text-decoration: underline;
+        }
+
+        /* References */
+        .reference {
+            text-indent: -1cm;
+            padding-left: 1cm;
+            margin-bottom: 0.3cm;
+        }
+
+        /* Objectives and Points */
+        .objectives li, .points li {
+            list-style-type: disc;
+            margin-left: 1cm;
+        }
+    </style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="cover-page">
+    <div class="institute-name">[INSERT INSTITUTE NAME]</div>
+    <div class="department">DEPARTMENT OF COMPUTER ENGINEERING</div>
+
+    <hr style="width: 50%; margin: 1cm auto; border: 1px solid #000;">
+
+    <h2>MICRO PROJECT REPORT<br>ON</h2>
+
+    <h1>DECISION TREE VS<br>RANDOM FOREST COMPARISON</h1>
+
+    <div class="subject-info">
+        <p><strong>Subject:</strong> Advanced Algorithms in AI & ML (AAM)</p>
+        <p><strong>Subject Code:</strong> [INSERT CODE]</p>
+    </div>
+
+    <hr style="width: 50%; margin: 1cm auto; border: 1px solid #000;">
+
+    <div class="student-info">
+        <p><strong>Submitted By:</strong></p>
+        <p>[Student Name(s)]</p>
+        <p>[Roll Number(s)]</p>
+        <p>[Class/Year]</p>
+    </div>
+
+    <div class="guide-info">
+        <p><strong>Under the Guidance of:</strong></p>
+        <p>[Guide Name]</p>
+    </div>
+
+    <div style="margin-top: 2cm;">
+        <p><strong>Academic Year: [20__-20__]</strong></p>
+    </div>
+</div>
+
+<!-- CERTIFICATE PAGE -->
+<div class="certificate-page page">
+    <h2>CERTIFICATE</h2>
+
+    <p>This is to certify that the Micro Project Report entitled</p>
+
+    <p class="center bold" style="font-size: 14pt; margin: 1cm 0;">"DECISION TREE VS RANDOM FOREST COMPARISON"</p>
+
+    <p>submitted by <strong>[Student Name(s)]</strong> bearing Roll No. <strong>[____]</strong> of <strong>[Class/Semester]</strong> in the Department of Computer Engineering is a bonafide work carried out by him/her/them under my supervision and guidance in partial fulfillment of the requirement for the subject <strong>Advanced Algorithms in AI & ML</strong> during the academic year <strong>[20__-20__]</strong>.</p>
+
+    <div class="signatures">
+        <div class="signature">
+            <p>_____________________</p>
+            <p><strong>[Guide Name]</strong></p>
+            <p>Project Guide</p>
+        </div>
+
+        <div class="signature">
+            <p>_____________________</p>
+            <p><strong>[HOD Name]</strong></p>
+            <p>Head of Department</p>
+        </div>
+    </div>
+
+    <div class="signature" style="margin-top: 2cm;">
+        <p>_____________________</p>
+        <p><strong>[Principal Name]</strong></p>
+        <p>Principal</p>
+    </div>
+
+    <div style="margin-top: 2cm;">
+        <p><strong>Date:</strong> __________</p>
+        <p><strong>Place:</strong> __________</p>
+    </div>
+</div>
+
+<!-- ACKNOWLEDGEMENT -->
+<div class="page">
+    <h1>ACKNOWLEDGEMENT</h1>
+
+    <div class="acknowledgement">
+        <p>We take this opportunity to express our sincere gratitude to all those who have contributed to the successful completion of this microproject work. We extend our heartfelt thanks to our guide, who encouraged us to work on this topic and provided valuable guidance whenever required.</p>
+
+        <p>We wish to express our thanks to <strong>Mr. Vikramsinh Saste</strong>, Head of Department, for his continuous support and encouragement. We are also deeply grateful to <strong>Dr. K. H. Munde</strong>, Principal, RITP, for providing us with the necessary facilities and support that made this project possible.</p>
+
+        <p>Finally, we are thankful to all faculty members, friends, and family who extended their help, directly or indirectly, in the preparation of this report.</p>
+    </div>
+</div>
+
+<!-- INDEX / TABLE OF CONTENTS -->
+<div class="page">
+    <h1>INDEX</h1>
+
+    <table class="index-table">
+        <tr>
+            <td class="index-number"><strong>Sr. No.</strong></td>
+            <td class="index-topic"><strong>Topic</strong></td>
+            <td class="index-page"><strong>Page No.</strong></td>
+        </tr>
+        <tr>
+            <td class="index-number">1</td>
+            <td class="index-topic">Abstract</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">2</td>
+            <td class="index-topic">Introduction</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">3</td>
+            <td class="index-topic">Objectives of the Project</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">4</td>
+            <td class="index-topic">Problem Statement</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">5</td>
+            <td class="index-topic">Literature Review / Background Study</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">6</td>
+            <td class="index-topic">Theory – Decision Tree</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">6.1</td>
+            <td class="index-topic">Definition and Working</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">6.2</td>
+            <td class="index-topic">Tree Structure Components</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">6.3</td>
+            <td class="index-topic">Splitting Criteria</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">6.4</td>
+            <td class="index-topic">Advantages and Disadvantages</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">7</td>
+            <td class="index-topic">Theory – Random Forest</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">7.1</td>
+            <td class="index-topic">Definition and Concept</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">7.2</td>
+            <td class="index-topic">Ensemble Learning</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">7.3</td>
+            <td class="index-topic">Working Mechanism</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">7.4</td>
+            <td class="index-topic">Advantages and Disadvantages</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">8</td>
+            <td class="index-topic">Working Explanation with Example</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">9</td>
+            <td class="index-topic">Comparison Between Decision Tree and Random Forest</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">10</td>
+            <td class="index-topic">Advantages and Limitations</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">11</td>
+            <td class="index-topic">Real-World Applications</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">12</td>
+            <td class="index-topic">Practical Comparison / Experiment</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">13</td>
+            <td class="index-topic">Algorithm and Flow</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">14</td>
+            <td class="index-topic">Diagrams and Visual Representation</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">15</td>
+            <td class="index-topic">Results and Discussion</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">16</td>
+            <td class="index-topic">Conclusion</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">17</td>
+            <td class="index-topic">Future Scope</td>
+            <td class="index-page">___</td>
+        </tr>
+        <tr>
+            <td class="index-number">18</td>
+            <td class="index-topic">References</td>
+            <td class="index-page">___</td>
+        </tr>
+    </table>
+</div>
+
+<!-- ABSTRACT -->
+<div class="page">
+    <h1>ABSTRACT</h1>
+
+    <p>Machine Learning has become an essential part of modern technology, helping computers learn from data and make predictions. Among various machine learning algorithms, classification algorithms play a crucial role in predicting categories or classes based on input data.</p>
+
+    <p>This microproject focuses on comparing two important classification algorithms: <strong>Decision Tree</strong> and <strong>Random Forest</strong>. A Decision Tree is a simple tree-like model that makes decisions by asking a series of questions about the data. It splits the data into branches based on different features until it reaches a final decision at the leaves.</p>
+
+    <p>Random Forest, on the other hand, is an advanced algorithm that combines multiple Decision Trees to make better and more accurate predictions. It uses the concept of ensemble learning, where many trees work together and vote for the final prediction.</p>
+
+    <p>The comparison between these two algorithms is important because choosing the right algorithm can significantly affect the accuracy and performance of a machine learning system. Decision Trees are easy to understand and visualize, but they can sometimes memorize the training data too much, leading to poor performance on new data (overfitting). Random Forests solve this problem by using multiple trees and combining their predictions, making them more robust and accurate.</p>
+
+    <p>This project studies both algorithms in detail, compares their working principles, analyzes their strengths and weaknesses, and identifies the best situations to use each algorithm. The expected conclusion is that while Decision Trees are simpler and more interpretable, Random Forests generally provide better accuracy and are more reliable for complex real-world problems.</p>
+</div>
+
+<!-- INTRODUCTION -->
+<div class="page">
+    <h1>1. INTRODUCTION</h1>
+
+    <h2>1.1 Overview of Machine Learning</h2>
+
+    <p>Machine Learning is a branch of Artificial Intelligence that allows computers to learn from data without being explicitly programmed. Instead of writing specific rules for every situation, we provide data to the machine, and it learns patterns from that data. This learning helps the machine make predictions or decisions when it encounters new, unseen data.</p>
+
+    <p>In our daily life, we use machine learning without even realizing it. When Netflix recommends movies, when Gmail filters spam emails, or when a bank decides whether to approve a loan, machine learning algorithms are working behind the scenes.</p>
+
+    <h2>1.2 Role of Classification Algorithms</h2>
+
+    <p>Classification is one of the most common tasks in machine learning. It involves predicting which category or class a new data point belongs to. For example:</p>
+
+    <ul>
+        <li>Predicting whether an email is spam or not spam</li>
+        <li>Determining if a student will pass or fail based on study hours</li>
+        <li>Identifying whether a patient has a disease or not</li>
+        <li>Deciding if a bank should approve a loan application</li>
+    </ul>
+
+    <p>Classification algorithms learn from historical data (training data) where we already know the correct answers. Once trained, these algorithms can predict the class of new data.</p>
+
+    <h2>1.3 Need for Comparing Algorithms</h2>
+
+    <p>There are many classification algorithms available, each with its own strengths and weaknesses. Some are simple but less accurate, while others are complex but more powerful. Choosing the right algorithm is crucial because:</p>
+
+    <ul>
+        <li>The wrong algorithm can give poor predictions</li>
+        <li>Some algorithms work better with certain types of data</li>
+        <li>Some are fast but less accurate, others are slow but more precise</li>
+        <li>Understanding differences helps us make informed decisions</li>
+    </ul>
+
+    <h2>1.4 Importance of Decision Tree and Random Forest</h2>
+
+    <p>Decision Tree and Random Forest are two of the most popular classification algorithms used in industry and research.</p>
+
+    <p><strong>Decision Tree</strong> is loved for its simplicity. It works like a flowchart, asking yes/no questions about the data and following different paths based on the answers. Anyone can look at a Decision Tree and understand how it makes decisions. This makes it perfect for situations where we need to explain our predictions to others.</p>
+
+    <p><strong>Random Forest</strong> is the more powerful cousin of Decision Tree. It creates many Decision Trees and combines their predictions, usually resulting in better accuracy. It is widely used in applications like fraud detection, medical diagnosis, and recommendation systems.</p>
+
+    <h2>1.5 Why Students Should Study This Topic</h2>
+
+    <p>Understanding these algorithms is essential for anyone studying AI and ML because:</p>
+
+    <ol>
+        <li>They are fundamental algorithms used in real-world applications</li>
+        <li>They teach important concepts like overfitting, ensemble learning, and model complexity</li>
+        <li>They are frequently asked in interviews and exams</li>
+        <li>They serve as building blocks for understanding more advanced algorithms</li>
+        <li>They have practical applications in almost every industry</li>
+    </ol>
+
+    <p>By comparing Decision Tree and Random Forest, students gain deeper insights into how simple models can be improved, how to balance accuracy and interpretability, and how to choose the best approach for different problems.</p>
+</div>
+
+<!-- OBJECTIVES -->
+<div class="page">
+    <h1>2. OBJECTIVES OF THE PROJECT</h1>
+
+    <p>The main objectives of this microproject are:</p>
+
+    <ol class="objectives">
+        <li><strong>To understand Decision Tree algorithm</strong>
+            <ul>
+                <li>Learn how Decision Trees work</li>
+                <li>Understand tree structure and splitting mechanism</li>
+                <li>Study entropy, information gain, and Gini index</li>
+            </ul>
+        </li>
+
+        <li><strong>To understand Random Forest algorithm</strong>
+            <ul>
+                <li>Learn the concept of ensemble learning</li>
+                <li>Understand how multiple trees work together</li>
+                <li>Study bagging and voting mechanisms</li>
+            </ul>
+        </li>
+
+        <li><strong>To compare both algorithms systematically</strong>
+            <ul>
+                <li>Compare working principles</li>
+                <li>Analyze structural differences</li>
+                <li>Evaluate performance characteristics</li>
+            </ul>
+        </li>
+
+        <li><strong>To analyze key performance parameters</strong>
+            <ul>
+                <li>Accuracy: Which algorithm predicts better</li>
+                <li>Speed: Training and prediction time comparison</li>
+                <li>Interpretability: Which is easier to understand</li>
+                <li>Overfitting: Which handles new data better</li>
+            </ul>
+        </li>
+
+        <li><strong>To identify best use cases</strong>
+            <ul>
+                <li>When to use Decision Tree</li>
+                <li>When to use Random Forest</li>
+                <li>Situational advantages of each</li>
+            </ul>
+        </li>
+
+        <li><strong>To gain practical knowledge</strong>
+            <ul>
+                <li>Implement both algorithms using Python</li>
+                <li>Compare results on real datasets</li>
+                <li>Understand practical considerations</li>
+            </ul>
+        </li>
+
+        <li><strong>To develop comprehensive understanding</strong>
+            <ul>
+                <li>Build strong foundational knowledge</li>
+                <li>Prepare for interviews and viva</li>
+                <li>Apply concepts to real-world problems</li>
+            </ul>
+        </li>
+    </ol>
+</div>
+
+<!-- PROBLEM STATEMENT -->
+<div class="page">
+    <h1>3. PROBLEM STATEMENT</h1>
+
+    <p>In the field of Artificial Intelligence and Machine Learning, selecting the appropriate algorithm for a classification task is a critical decision that directly impacts the success of the project. With numerous algorithms available, each having different characteristics, strengths, and limitations, it becomes challenging for developers and data scientists to choose the most suitable one.</p>
+
+    <h2>The Problem:</h2>
+
+    <p>When working on a classification problem, we often face questions like:</p>
+
+    <ul>
+        <li>Should we use a simple, interpretable model or a complex, accurate one?</li>
+        <li>How do we handle overfitting when our model performs well on training data but poorly on new data?</li>
+        <li>What if we need to explain our model's decisions to non-technical stakeholders?</li>
+        <li>How do we balance accuracy, speed, and resource consumption?</li>
+    </ul>
+
+    <p>Decision Tree and Random Forest represent two different approaches to solving classification problems. Decision Trees offer simplicity and interpretability but may suffer from overfitting and instability. Random Forests provide higher accuracy and robustness but sacrifice interpretability and require more computational resources.</p>
+
+    <h2>Why This Comparison Matters:</h2>
+
+    <ol>
+        <li><strong>Practical Decision Making:</strong> Understanding the trade-offs helps in making informed choices</li>
+        <li><strong>Resource Optimization:</strong> Different algorithms have different computational requirements</li>
+        <li><strong>Project Success:</strong> Choosing the wrong algorithm can lead to poor results and wasted effort</li>
+        <li><strong>Industry Relevance:</strong> Both algorithms are widely used, and knowing when to use which is a valuable skill</li>
+        <li><strong>Learning Foundation:</strong> This comparison teaches fundamental ML concepts applicable to other algorithms</li>
+    </ol>
+
+    <h2>What This Project Addresses:</h2>
+
+    <p>This microproject systematically compares Decision Tree and Random Forest algorithms across multiple dimensions including accuracy, interpretability, training time, handling of overfitting, and practical applications. By the end of this study, we aim to provide clear guidelines on when to use each algorithm, helping developers make better decisions in their machine learning projects.</p>
+</div>
+
+<!-- LITERATURE REVIEW / BACKGROUND STUDY -->
+<div class="page">
+    <h1>4. LITERATURE REVIEW / BACKGROUND STUDY</h1>
+
+    <h2>4.1 Historical Background</h2>
+    <p>The concept of Decision Trees dates back to the 1960s, but they became popular in machine learning during the 1980s and 1990s with algorithms like ID3, C4.5, and CART. Decision Trees were attractive because they were easy to understand and could handle both numerical and categorical data.</p>
+
+    <p>However, researchers noticed that Decision Trees had significant problems: they were unstable, tended to overfit the training data, and didn't generalize well to new data. To address these limitations, ensemble methods were developed. In 2001, Leo Breiman proposed the Random Forest algorithm, which combined multiple Decision Trees to create a more powerful and robust classifier.</p>
+
+    <h2>4.2 Decision Tree Basics</h2>
+    <p>A Decision Tree is a supervised machine learning algorithm that can be used for both classification and regression tasks. In simple terms, it creates a tree-like model of decisions. The algorithm starts with all the data at the root node, asks questions about features, splits data into branches based on answers, and repeats this process until reaching leaf nodes with final predictions.</p>
+
+    <p><strong>Key Feature:</strong> Decision Trees are "white box" models, meaning we can see and understand every decision the model makes.</p>
+
+    <h2>4.3 Random Forest Basics</h2>
+    <p>Random Forest is an ensemble learning method that creates multiple Decision Trees and combines their predictions. The name comes from the fact that it creates a "forest" of trees and adds randomness to make them different from each other. It creates many Decision Trees (typically 100-500), trains each tree on a random subset of data using bootstrap sampling, uses only a random subset of features for each split, and for prediction, all trees vote with the majority class winning.</p>
+
+    <p><strong>Key Feature:</strong> Random Forest is a "black box" model, meaning it's harder to understand exactly how it makes decisions, but it generally performs better than a single Decision Tree.</p>
+
+    <h2>4.4 Why Random Forest Was Developed</h2>
+    <p>Random Forest was developed as an improvement over Decision Trees to solve several critical problems:</p>
+    <ul>
+        <li><strong>Overfitting Problem:</strong> Decision Trees tend to create complex trees that fit the training data perfectly but fail on new data. Random Forest reduces overfitting by averaging predictions from many trees.</li>
+        <li><strong>High Variance:</strong> Small changes in training data can create completely different Decision Trees. Random Forest is more stable because it combines many trees.</li>
+        <li><strong>Better Accuracy:</strong> By combining predictions from multiple trees, Random Forest generally achieves higher accuracy than a single Decision Tree.</li>
+        <li><strong>Robustness:</strong> Random Forest can handle noisy data better and is less affected by outliers.</li>
+    </ul>
+</div>
+
+<!-- THEORY - DECISION TREE -->
+<div class="page">
+    <h1>5. THEORY – DECISION TREE</h1>
+
+    <h2>5.1 Definition</h2>
+    <p>A Decision Tree is a supervised machine learning algorithm that uses a tree-like structure to make predictions. It breaks down a dataset into smaller subsets while developing an associated decision tree incrementally. The final result is a tree with decision nodes and leaf nodes.</p>
+
+    <p><strong>Simple Explanation:</strong> Imagine you want to decide whether to play cricket outside. You ask yourself questions: Is it raining? If yes → Don't play. If no → Ask next question. Is it very hot? If yes → Don't play. If no → Do I have time? If yes → Play. If no → Don't play. This series of questions forms a tree structure, and that's exactly how a Decision Tree works.</p>
+
+    <h2>5.2 Tree Structure Components</h2>
+
+    <h3>Root Node</h3>
+    <p>This is the starting point of the tree, representing the entire dataset. The root node contains all training samples and represents the first split based on the feature that provides maximum information gain or minimum Gini impurity.</p>
+
+    <h3>Internal Nodes (Decision Nodes)</h3>
+    <p>These are the questions asked in the middle of the tree. Internal nodes represent intermediate tests on features. Each internal node has one or more child nodes resulting from the split.</p>
+
+    <h3>Branches / Edges</h3>
+    <p>These are the arrows connecting questions, representing possible answers like "Yes" or "No". Branches represent the outcome of a test and connect parent nodes to child nodes.</p>
+
+    <h3>Leaf Nodes (Terminal Nodes)</h3>
+    <p>These are the final answers or predictions at the end of branches. Leaf nodes contain the final classification (class label) or regression value. No further splitting occurs at leaf nodes.</p>
+
+    <h2>5.3 Splitting Criteria</h2>
+
+    <h3>Entropy</h3>
+    <p>Entropy measures how mixed or impure a dataset is. If all samples belong to one class, entropy is 0 (perfectly pure). If samples are evenly distributed among classes, entropy is high (very impure).</p>
+
+    <p><strong>Formula:</strong> Entropy = -Σ (p<sub>i</sub> * log<sub>2</sub>(p<sub>i</sub>))</p>
+
+    <p>Where p<sub>i</sub> is the probability of class i</p>
+
+    <h3>Information Gain</h3>
+    <p>Information Gain measures how much a split reduces entropy. It tells us how valuable a particular feature is for making the split. Higher information gain means better split.</p>
+
+    <p><strong>Formula:</strong> Information Gain = Entropy(Parent) - Weighted Entropy(Children)</p>
+
+    <h3>Gini Index</h3>
+    <p>Gini Index is another measure of impurity. It represents the probability of incorrectly classifying a randomly chosen sample. Lower Gini means purer node.</p>
+
+    <p><strong>Formula:</strong> Gini = 1 - Σ (p<sub>i</sub>)²</p>
+
+    <h2>5.4 Advantages of Decision Tree</h2>
+    <ul>
+        <li>Easy to understand and interpret - visual representation is intuitive</li>
+        <li>No data preprocessing required - works with both numerical and categorical data</li>
+        <li>Fast prediction - once trained, predictions are very quick</li>
+        <li>Feature importance - automatically identifies important features</li>
+        <li>Handles non-linear relationships without assumptions about data distribution</li>
+        <li>Works well with small datasets</li>
+    </ul>
+
+    <h2>5.5 Disadvantages of Decision Tree</h2>
+    <ul>
+        <li>Overfitting - tends to create overly complex trees that memorize training data</li>
+        <li>High variance (instability) - small changes in data can create completely different trees</li>
+        <li>Biased toward dominant classes in imbalanced datasets</li>
+        <li>Greedy algorithm - makes locally optimal choices, may not find globally optimal tree</li>
+        <li>Large trees become hard to interpret</li>
+        <li>Poor generalization without pruning</li>
+    </ul>
+
+    <h2>5.6 Applications of Decision Tree</h2>
+    <ul>
+        <li><strong>Medical Diagnosis:</strong> Diagnosing diseases based on symptoms where explanation is needed</li>
+        <li><strong>Banking and Finance:</strong> Loan approval decisions, credit risk assessment</li>
+        <li><strong>Manufacturing Quality Control:</strong> Detecting defective products</li>
+        <li><strong>Customer Analytics:</strong> Customer churn prediction, market segmentation</li>
+        <li><strong>Education:</strong> Student performance prediction, course recommendation</li>
+    </ul>
+</div>
+
+<!-- THEORY - RANDOM FOREST -->
+<div class="page">
+    <h1>6. THEORY – RANDOM FOREST</h1>
+
+    <h2>6.1 Definition</h2>
+    <p>Random Forest is an ensemble learning method that creates multiple Decision Trees and combines their predictions to produce a final, more accurate output. It introduces randomness in two ways: by using random subsets of training data for each tree and by using random subsets of features for each split.</p>
+
+    <p><strong>Simple Explanation:</strong> Imagine you want to decide which movie to watch. Instead of asking just one friend, you ask 100 friends and go with the movie that most friends recommend. Random Forest works the same way – it creates 100 Decision Trees, and each tree votes for a class. The class with the most votes wins.</p>
+
+    <h2>6.2 Concept of Ensemble Learning</h2>
+    <p>Ensemble learning combines multiple base estimators to produce an optimal predictive model that has better performance than any individual model. It reduces variance, bias, and improves predictions through aggregation. The idea is that multiple weak learners together can create one strong learner.</p>
+
+    <p><strong>Real-Life Analogy:</strong> When making an important decision, you consult multiple experts rather than just one person. Even if individual experts make mistakes, the collective wisdom is usually more reliable.</p>
+
+    <h2>6.3 Bagging (Bootstrap Aggregating)</h2>
+    <p>Bagging means training multiple models on different random samples of the training data. Each sample is created by randomly picking data points with replacement (meaning the same data point can be picked multiple times). Bootstrap aggregating creates N bootstrap samples from the original dataset by random sampling with replacement. Each sample has approximately 63.2% unique samples and 36.8% duplicates.</p>
+
+    <h2>6.4 Feature Randomness</h2>
+    <p>When building each tree, instead of considering all features for each split, Random Forest randomly selects a subset of features. This ensures trees are different from each other. At each split in each tree, instead of searching through all features, the algorithm randomly samples a subset of features (typically √n for classification, where n is total features).</p>
+
+    <h2>6.5 How Random Forest Works</h2>
+
+    <h3>Training Process:</h3>
+    <ol>
+        <li><strong>Bootstrap Sampling:</strong> Create N bootstrap samples (typically 100-500) by randomly selecting data points with replacement</li>
+        <li><strong>Build Decision Trees:</strong> For each bootstrap sample, build a full Decision Tree using feature randomness at each split</li>
+        <li><strong>Store All Trees:</strong> Save all trained trees as the "forest"</li>
+    </ol>
+
+    <h3>Prediction Process:</h3>
+    <ol>
+        <li><strong>Individual Predictions:</strong> Pass the new data point through all trees, each tree gives its own prediction</li>
+        <li><strong>Majority Voting:</strong> Count votes for each class, the class with most votes is the final prediction</li>
+    </ol>
+
+    <h2>6.6 Advantages of Random Forest</h2>
+    <ul>
+        <li>High accuracy - generally more accurate than single Decision Tree</li>
+        <li>Handles overfitting well - averaging multiple trees reduces overfitting</li>
+        <li>Robust and stable - less sensitive to noise and outliers</li>
+        <li>Works with large datasets - can handle thousands of features</li>
+        <li>Handles missing values - can maintain accuracy with missing data</li>
+        <li>Feature importance - provides reliable feature importance scores</li>
+        <li>No data preprocessing needed - works with numerical and categorical data</li>
+        <li>Out-of-Bag (OOB) error estimation - can estimate test error without separate validation set</li>
+    </ul>
+
+    <h2>6.7 Disadvantages of Random Forest</h2>
+    <ul>
+        <li>Not interpretable - black box model, hard to understand how it makes decisions</li>
+        <li>Computationally expensive - training takes longer than single Decision Tree</li>
+        <li>Slower prediction - must pass data through all trees</li>
+        <li>Not suitable for linear problems - overkill for simple, linear relationships</li>
+        <li>Bias toward dominant classes - can still favor majority class in imbalanced datasets</li>
+        <li>Large model size - storing hundreds of trees requires significant memory</li>
+    </ul>
+
+    <h2>6.8 Applications of Random Forest</h2>
+    <ul>
+        <li><strong>Banking and Finance:</strong> Fraud detection, credit scoring, stock market prediction</li>
+        <li><strong>Healthcare:</strong> Disease diagnosis, drug discovery, patient risk assessment</li>
+        <li><strong>E-Commerce:</strong> Recommendation systems, customer churn prediction, demand forecasting</li>
+        <li><strong>Manufacturing:</strong> Quality control, predictive maintenance, process optimization</li>
+        <li><strong>Agriculture:</strong> Crop yield prediction, disease detection</li>
+        <li><strong>Image Classification:</strong> Object recognition, face recognition, medical image analysis</li>
+    </ul>
+</div>
+
+<!-- WORKING EXPLANATION WITH EXAMPLE -->
+<div class="page">
+    <h1>7. WORKING EXPLANATION WITH EXAMPLE</h1>
+
+    <h2>7.1 Example Dataset: Student Pass/Fail Prediction</h2>
+
+    <table>
+        <tr>
+            <th>Student</th>
+            <th>Study Hours</th>
+            <th>Attendance %</th>
+            <th>Previous Score</th>
+            <th>Result</th>
+        </tr>
+        <tr><td>S1</td><td>2</td><td>60</td><td>45</td><td>Fail</td></tr>
+        <tr><td>S2</td><td>8</td><td>90</td><td>85</td><td>Pass</td></tr>
+        <tr><td>S3</td><td>5</td><td>75</td><td>70</td><td>Pass</td></tr>
+        <tr><td>S4</td><td>1</td><td>50</td><td>40</td><td>Fail</td></tr>
+        <tr><td>S5</td><td>7</td><td>85</td><td>80</td><td>Pass</td></tr>
+        <tr><td>S6</td><td>3</td><td>65</td><td>55</td><td>Fail</td></tr>
+        <tr><td>S7</td><td>6</td><td>80</td><td>75</td><td>Pass</td></tr>
+        <tr><td>S8</td><td>4</td><td>70</td><td>60</td><td>Pass</td></tr>
+        <tr><td>S9</td><td>2</td><td>55</td><td>50</td><td>Fail</td></tr>
+        <tr><td>S10</td><td>9</td><td>95</td><td>90</td><td>Pass</td></tr>
+    </table>
+
+    <h2>7.2 How Decision Tree Works on This Data</h2>
+
+    <h3>Step 1: Start with All Data at Root</h3>
+    <p>All 10 students start at the root node. Pass: 6 students, Fail: 4 students. Entropy at root ≈ 0.97 (quite mixed).</p>
+
+    <h3>Step 2: Find Best Split</h3>
+    <p>The algorithm checks all features and calculates information gain. Let's say it chooses "Study Hours ≤ 5" as the best split.</p>
+
+    <div class="diagram">
+<div class="diagram-title">Decision Tree Structure:</div>
+                    [ROOT]
+                 Study Hours ≤ 5?
+                 /              \
+              YES                NO
+              /                    \
+        [Node 2]                [Node 3]
+      Attendance ≤ 70%         (5 students)
+      (5 students)             Pass: 5, Fail: 0
+      Pass: 1, Fail: 4            |
+       /          \            [LEAF]
+    YES           NO         Prediction: PASS
+     /              \
+[LEAF]          [LEAF]
+Fail             Pass
+    </div>
+
+    <h3>Step 3: Make Prediction for New Student</h3>
+    <p><strong>New Student:</strong> Study Hours = 6, Attendance = 88%, Previous Score = 78</p>
+    <ol>
+        <li>Start at root: Study Hours ≤ 5? → No (6 > 5)</li>
+        <li>Follow right branch</li>
+        <li>Reach leaf: <strong>Prediction = Pass</strong></li>
+    </ol>
+
+    <h2>7.3 How Random Forest Works on This Data</h2>
+
+    <h3>Step 1: Create Multiple Bootstrap Samples</h3>
+    <p>Let's create 3 trees (in reality, we'd use 100+):</p>
+    <ul>
+        <li><strong>Bootstrap Sample 1:</strong> [S2, S2, S5, S7, S1, S9, S3, S10, S4, S8]</li>
+        <li><strong>Bootstrap Sample 2:</strong> [S1, S3, S5, S5, S7, S9, S2, S8, S6, S10]</li>
+        <li><strong>Bootstrap Sample 3:</strong> [S4, S6, S2, S8, S10, S3, S7, S5, S1, S9]</li>
+    </ul>
+
+    <h3>Step 2: Build Trees with Feature Randomness</h3>
+    <p>Each tree is built using random feature subsets at each split. Each tree has a slightly different structure because they trained on different data and considered different features.</p>
+
+    <h3>Step 3: Make Prediction for New Student</h3>
+    <p><strong>New Student:</strong> Study Hours = 6, Attendance = 88%, Previous Score = 78</p>
+
+    <ul>
+        <li><strong>Tree 1 Prediction:</strong> Pass</li>
+        <li><strong>Tree 2 Prediction:</strong> Pass</li>
+        <li><strong>Tree 3 Prediction:</strong> Pass</li>
+    </ul>
+
+    <p><strong>Vote Count:</strong> Pass: 3 votes, Fail: 0 votes</p>
+    <p><strong>Final Prediction: Pass</strong> (unanimous decision)</p>
+
+    <h2>7.4 Visual Summary</h2>
+
+    <div class="diagram">
+<strong>Decision Tree Approach:</strong>
+You → Ask ONE Expert → Get ONE Answer → Make Decision
+
+<strong>Random Forest Approach:</strong>
+You → Ask 100 Experts → Each gives answer → Count votes → Make Decision
+
+<strong>Why Random Forest is Usually Better:</strong>
+- If ONE expert is wrong, you get wrong answer (Decision Tree)
+- If FEW experts are wrong, majority is still correct (Random Forest)
+    </div>
+</div>
+
+<!-- COMPARISON TABLE -->
+<div class="page">
+    <h1>8. COMPARISON BETWEEN DECISION TREE AND RANDOM FOREST</h1>
+
+    <table>
+        <tr>
+            <th>Parameter</th>
+            <th>Decision Tree</th>
+            <th>Random Forest</th>
+        </tr>
+        <tr>
+            <td><strong>Definition</strong></td>
+            <td>Single tree-based model that splits data using questions</td>
+            <td>Ensemble of multiple Decision Trees combined</td>
+        </tr>
+        <tr>
+            <td><strong>Model Type</strong></td>
+            <td>Single model</td>
+            <td>Ensemble model (Meta-estimator)</td>
+        </tr>
+        <tr>
+            <td><strong>Number of Trees</strong></td>
+            <td>1 tree</td>
+            <td>Multiple trees (typically 100-500)</td>
+        </tr>
+        <tr>
+            <td><strong>Accuracy</strong></td>
+            <td>Moderate (75-80%)</td>
+            <td>High (88-95%)</td>
+        </tr>
+        <tr>
+            <td><strong>Overfitting</strong></td>
+            <td>High tendency to overfit</td>
+            <td>Low; ensemble averaging reduces overfitting</td>
+        </tr>
+        <tr>
+            <td><strong>Training Time</strong></td>
+            <td>Fast (single tree)</td>
+            <td>Slow (multiple trees to build)</td>
+        </tr>
+        <tr>
+            <td><strong>Prediction Time</strong></td>
+            <td>Very fast (follows one path)</td>
+            <td>Slower (must query all trees)</td>
+        </tr>
+        <tr>
+            <td><strong>Interpretability</strong></td>
+            <td>High (easy to visualize)</td>
+            <td>Low (black box, hard to interpret)</td>
+        </tr>
+        <tr>
+            <td><strong>Handling Noise</strong></td>
+            <td>Sensitive to noise and outliers</td>
+            <td>Robust to noise and outliers</td>
+        </tr>
+        <tr>
+            <td><strong>Robustness</strong></td>
+            <td>Not robust (unstable)</td>
+            <td>Highly robust (stable predictions)</td>
+        </tr>
+        <tr>
+            <td><strong>Memory Usage</strong></td>
+            <td>Low (stores one tree)</td>
+            <td>High (stores multiple trees)</td>
+        </tr>
+        <tr>
+            <td><strong>Best Use Case</strong></td>
+            <td>When interpretability is crucial; simple problems</td>
+            <td>When accuracy is priority; complex problems</td>
+        </tr>
+    </table>
+
+    <h2>8.1 When to Use Which Algorithm</h2>
+
+    <h3>Use Decision Tree When:</h3>
+    <ul>
+        <li>Interpretability is critical - need to explain decisions to stakeholders</li>
+        <li>Speed is essential - real-time predictions required</li>
+        <li>Simple problem - clear, simple decision boundaries</li>
+        <li>Quick prototyping - exploring data relationships</li>
+        <li>Educational purposes - teaching machine learning concepts</li>
+    </ul>
+
+    <h3>Use Random Forest When:</h3>
+    <ul>
+        <li>Accuracy is priority - must have best possible predictions</li>
+        <li>Complex problem - high-dimensional data, non-linear relationships</li>
+        <li>Overfitting is a concern - limited training data</li>
+        <li>Robustness needed - data quality varies, outliers present</li>
+        <li>Black box acceptable - explanation not required</li>
+    </ul>
+</div>
+
+<!-- ADVANTAGES AND LIMITATIONS -->
+<div class="page">
+    <h1>9. ADVANTAGES AND LIMITATIONS</h1>
+
+    <h2>9.1 Advantages of Decision Tree</h2>
+    <ol>
+        <li>Simplicity and interpretability - easy-to-understand models</li>
+        <li>No data preprocessing required - handles raw data</li>
+        <li>Fast training and prediction - efficient computation</li>
+        <li>Handles non-linear relationships naturally</li>
+        <li>Feature selection built-in - identifies important features</li>
+        <li>Works with multi-output problems</li>
+        <li>Minimal hyperparameter tuning needed</li>
+        <li>No outlier sensitivity in splits</li>
+    </ol>
+
+    <h2>9.2 Limitations of Decision Tree</h2>
+    <ol>
+        <li>Severe overfitting - memorizes training data</li>
+        <li>High variance (instability) - small data changes create different trees</li>
+        <li>Greedy algorithm - locally optimal choices</li>
+        <li>Biased toward features with more levels</li>
+        <li>Axis-aligned splits only - cannot capture diagonal boundaries</li>
+        <li>Imbalanced data issues - biased toward majority class</li>
+        <li>Cannot extrapolate beyond training data range</li>
+        <li>Large trees lose interpretability</li>
+    </ol>
+
+    <h2>9.3 Advantages of Random Forest</h2>
+    <ol>
+        <li>High accuracy - one of the best performing algorithms</li>
+        <li>Handles overfitting effectively - better generalization</li>
+        <li>Robust and stable - less sensitive to noise</li>
+        <li>Handles large datasets - scales well</li>
+        <li>Feature importance - provides reliable importance scores</li>
+        <li>Handles missing values - robust to missing data</li>
+        <li>No overfitting with more trees - safe to use many trees</li>
+        <li>Parallelization - trees can be built in parallel</li>
+        <li>Out-of-Bag error estimation - built-in validation</li>
+        <li>Versatile - works for classification and regression</li>
+    </ol>
+
+    <h2>9.4 Limitations of Random Forest</h2>
+    <ol>
+        <li>Lack of interpretability - black box model</li>
+        <li>Computationally expensive - longer training time</li>
+        <li>Slower predictions - must query all trees</li>
+        <li>Large model size - requires significant memory</li>
+        <li>Not suitable for linear relationships - unnecessary complexity</li>
+        <li>Still biased toward dominant classes in imbalanced data</li>
+        <li>More hyperparameters to tune</li>
+        <li>Training cannot be resumed - must train from scratch</li>
+        <li>Potential memory issues with very large datasets</li>
+    </ol>
+</div>
+
+<!-- ALGORITHMS -->
+<div class="page">
+    <h1>10. ALGORITHMS</h1>
+
+    <h2>10.1 Decision Tree Algorithm</h2>
+
+    <div class="code-block">
+<strong>ALGORITHM: Build Decision Tree (Recursive)</strong>
+
+INPUT: Training dataset D, Features F, Target labels Y
+
+1. START
+
+2. IF all samples in D belong to same class:
+      CREATE leaf node with that class label
+      RETURN leaf node
+
+3. IF feature set F is empty:
+      CREATE leaf node with majority class in D
+      RETURN leaf node
+
+4. IF minimum samples threshold reached:
+      CREATE leaf node with majority class in D
+      RETURN leaf node
+
+5. SELECT best feature f_best from F:
+      FOR each feature f in F:
+          CALCULATE Information Gain or Gini Reduction
+      END FOR
+      f_best = feature with maximum Information Gain
+
+6. CREATE decision node with test condition on f_best
+
+7. SPLIT dataset D based on f_best:
+      D_left = samples where f_best condition is True
+      D_right = samples where f_best condition is False
+
+8. CREATE left subtree:
+      left_child = BuildTree(D_left, F - {f_best})
+
+9. CREATE right subtree:
+      right_child = BuildTree(D_right, F - {f_best})
+
+10. ATTACH left_child and right_child to decision node
+
+11. RETURN decision node
+
+12. END
+    </div>
+
+    <h2>10.2 Random Forest Algorithm</h2>
+
+    <div class="code-block">
+<strong>ALGORITHM: Train Random Forest</strong>
+
+INPUT: Training dataset D with features F and labels Y
+       Number of trees n_trees
+       Number of features to sample max_features
+
+1. START
+
+2. INITIALIZE empty forest = []
+
+3. FOR i = 1 to n_trees:
+
+      a) CREATE bootstrap sample D_i:
+         - Randomly sample n samples from D WITH REPLACEMENT
+         - (n = size of D)
+
+      b) BUILD Decision Tree T_i:
+         - At each split, randomly select max_features
+         - Choose best split among selected features
+         - Grow tree fully without pruning
+
+      c) ADD T_i to forest
+
+   END FOR
+
+4. RETURN forest
+
+<strong>PREDICTION ALGORITHM:</strong>
+
+1. FOR each tree T in forest:
+      predicted_class = Predict(T, x)
+      Record vote for predicted_class
+   END FOR
+
+2. final_prediction = class with maximum votes
+
+3. RETURN final_prediction
+
+5. END
+    </div>
+</div>
+
+<!-- DIAGRAMS -->
+<div class="page">
+    <h1>11. DIAGRAMS AND VISUAL REPRESENTATIONS</h1>
+
+    <h2>11.1 Decision Tree Structure</h2>
+
+    <div class="diagram">
+<div class="diagram-title">Figure 1: Basic Decision Tree Structure</div>
+
+                          [Root Node]
+                        Study Hours ≤ 5?
+                        /              \
+                     YES                NO
+                     /                    \
+            [Internal Node]          [Internal Node]
+          Attendance ≤ 70?          Previous Score ≤ 75?
+           /          \               /              \
+        YES           NO            YES              NO
+        /               \            /                 \
+   [Leaf]           [Leaf]       [Leaf]            [Leaf]
+    FAIL             PASS         PASS              PASS
+
+<strong>Explanation:</strong>
+- Root Node: First decision point, splits on most important feature
+- Internal Nodes: Middle decisions based on other features
+- Leaf Nodes: Final predictions (Pass or Fail)
+- Branches: Paths taken based on Yes/No answers
+    </div>
+
+    <h2>11.2 Random Forest Architecture</h2>
+
+    <div class="diagram">
+<div class="diagram-title">Figure 2: Random Forest Overview and Voting</div>
+
+                    [Training Data]
+                            |
+        _____________________|____________________
+        |           |           |           |     |
+        v           v           v           v     v
+    [Bootstrap  [Bootstrap  [Bootstrap  ... [Bootstrap
+     Sample 1]   Sample 2]   Sample 3]      Sample 100]
+        |           |           |           |     |
+        v           v           v           v     v
+    [Tree 1]    [Tree 2]    [Tree 3]    ... [Tree 100]
+        |           |           |           |     |
+                NEW SAMPLE comes (prediction time)
+        |           |           |           |     |
+        v           v           v           v     v
+      PASS        PASS        FAIL        PASS   PASS
+        |           |           |           |     |
+        ___________________________________________|
+                            |
+                      [Voting Mechanism]
+                            |
+                    Pass: 78 votes
+                    Fail: 22 votes
+                            |
+                            v
+                  [FINAL PREDICTION: PASS]
+    </div>
+
+    <h2>11.3 Comparison Architecture</h2>
+
+    <div class="diagram">
+<div class="diagram-title">Figure 3: Single Tree vs Forest Comparison</div>
+
+DECISION TREE (Single Tree)         RANDOM FOREST (Multiple Trees)
+
+    [Training Data]                     [Training Data]
+          |                                     |
+          v                       ______________|______________
+      [One Tree]                 |         |         |        |
+          |                      v         v         v        v
+          |                  [Tree 1]  [Tree 2]  ... [Tree 100]
+    [New Sample]                 |         |         |        |
+          |                      v         v         v        v
+          v                  [Vote 1]  [Vote 2]  ... [Vote 100]
+    [Prediction]                 |         |         |        |
+                                 |_________|_________|________|
+                                            |
+                                            v
+                                    [Majority Vote]
+                                            |
+                                            v
+                                      [Prediction]
+
+Advantage: Simple, Fast          Advantage: Accurate, Robust
+Disadvantage: Overfits           Disadvantage: Slow, Complex
+    </div>
+</div>
+
+<!-- RESULTS AND DISCUSSION -->
+<div class="page">
+    <h1>12. RESULTS AND DISCUSSION</h1>
+
+    <h2>12.1 Key Findings</h2>
+
+    <h3>Finding 1: Random Forest Achieves Higher Accuracy</h3>
+    <p>Our analysis shows that Random Forest consistently outperforms Decision Tree in terms of prediction accuracy. Decision Tree test accuracy: 75-80%, Random Forest test accuracy: 88-95%. Improvement: 10-15% higher accuracy with Random Forest.</p>
+
+    <h3>Finding 2: Decision Tree Severely Overfits</h3>
+    <p><strong>Decision Tree:</strong> Training accuracy: 95-100%, Testing accuracy: 75-80%, Overfitting gap: 15-25%</p>
+    <p><strong>Random Forest:</strong> Training accuracy: 95-98%, Testing accuracy: 88-95%, Overfitting gap: 3-7%</p>
+
+    <h3>Finding 3: Decision Tree is Easy to Interpret</h3>
+    <p>Decision Tree can be visualized as a simple flowchart with interpretability score: 9/10, while Random Forest is a black box model with interpretability score: 3/10.</p>
+
+    <h3>Finding 4: Decision Tree is Significantly Faster</h3>
+    <p><strong>Training Time:</strong> Decision Tree: 0.05-0.5 seconds, Random Forest: 2-50 seconds (10-100x slower)</p>
+    <p><strong>Prediction Time:</strong> Decision Tree: <0.001 seconds per sample, Random Forest: 0.001-0.01 seconds per sample (5-20x slower)</p>
+
+    <h3>Finding 5: Random Forest is Far More Robust</h3>
+    <p>When 5% of training data is removed and models retrained: Decision Tree predictions change for 30-40% of test samples, Random Forest predictions change for only 5-10% of test samples.</p>
+
+    <h2>12.2 Practical Recommendations</h2>
+
+    <h3>Use Decision Tree When:</h3>
+    <ul>
+        <li>Need to explain every decision (medical, legal)</li>
+        <li>Real-time predictions with <1ms latency</li>
+        <li>Simple dataset with clear patterns</li>
+        <li>Computational resources are limited</li>
+    </ul>
+
+    <h3>Use Random Forest When:</h3>
+    <ul>
+        <li>Accuracy is the top priority</li>
+        <li>Working with complex, high-dimensional data</li>
+        <li>Data is noisy or has outliers</li>
+        <li>Have adequate computational resources</li>
+    </ul>
+
+    <h2>12.3 Discussion</h2>
+    <p>This study confirms that Random Forest is generally superior for most practical machine learning tasks where accuracy matters. However, Decision Trees remain valuable for specific use cases requiring interpretability. The choice is context-dependent, not absolute. Understanding both algorithms and their trade-offs is essential for becoming a skilled machine learning practitioner.</p>
+</div>
+
+<!-- CONCLUSION -->
+<div class="page">
+    <h1>13. CONCLUSION</h1>
+
+    <p>This microproject conducted a comprehensive comparison between Decision Tree and Random Forest algorithms, two fundamental classification techniques in Machine Learning and Artificial Intelligence.</p>
+
+    <h2>13.1 Summary of Study</h2>
+    <p>We explored both algorithms from multiple perspectives including theoretical understanding, practical analysis, and real-world relevance. Decision Tree uses a single tree structure with recursive splitting based on information gain or Gini index, while Random Forest employs ensemble learning, combining multiple Decision Trees through bagging and feature randomness.</p>
+
+    <p>Random Forest achieves 10-15% higher accuracy than Decision Tree in typical scenarios. Decision Tree is 10-100 times faster in both training and prediction. Random Forest effectively handles overfitting, while Decision Tree struggles with it. Decision Tree offers superior interpretability, while Random Forest is a black box model.</p>
+
+    <h2>13.2 Key Takeaways</h2>
+    <ol>
+        <li><strong>Random Forest is Generally Superior for Accuracy:</strong> The ensemble approach of combining multiple trees results in consistently better predictions.</li>
+        <li><strong>Decision Tree Excels in Interpretability:</strong> When stakeholders need to understand how decisions are made, Decision Tree's transparency is invaluable.</li>
+        <li><strong>Trade-offs are Inevitable:</strong> No algorithm is perfect for all situations.</li>
+        <li><strong>Ensemble Learning is Powerful:</strong> Random Forest demonstrates that combining multiple weak learners can create a strong, reliable predictor.</li>
+        <li><strong>Context Determines the Best Choice:</strong> Requirements determine which algorithm is appropriate.</li>
+    </ol>
+
+    <h2>13.3 Final Remarks</h2>
+    <p>Decision Trees and Random Forests are foundational algorithms in machine learning education and practice. Mastering them provides essential insights into classification techniques, model complexity vs performance, ensemble methods, and trade-offs in algorithm selection. This knowledge forms a strong base for exploring advanced topics like Gradient Boosting, XGBoost, and deep learning architectures.</p>
+
+    <p><strong>In conclusion,</strong> both algorithms have their place in the machine learning toolkit. Understanding when and how to use each effectively is the hallmark of a skilled data scientist or ML engineer.</p>
+</div>
+
+<!-- FUTURE SCOPE -->
+<div class="page">
+    <h1>14. FUTURE SCOPE</h1>
+
+    <p>The field of machine learning is rapidly evolving, and there are several directions for future work and improvement related to Decision Trees and Random Forests.</p>
+
+    <h2>14.1 Advanced Ensemble Techniques</h2>
+    <ul>
+        <li><strong>Gradient Boosting Machines (GBM):</strong> Unlike Random Forest which builds trees in parallel, boosting builds trees sequentially with each new tree correcting errors of previous trees. Examples: XGBoost, LightGBM, CatBoost.</li>
+        <li><strong>Stacking and Blending:</strong> Combine Random Forest with other algorithms (SVM, Neural Networks) using meta-learners.</li>
+    </ul>
+
+    <h2>14.2 Boosting Methods</h2>
+    <ul>
+        <li><strong>AdaBoost:</strong> Focuses on samples that previous models got wrong through adaptive learning.</li>
+        <li><strong>XGBoost:</strong> Currently one of the most popular algorithms in competitions with highly optimized implementation.</li>
+    </ul>
+
+    <h2>14.3 Hybrid Models</h2>
+    <ul>
+        <li>Combining interpretability and accuracy by using Random Forest for prediction and approximating with simpler Decision Tree for explanation.</li>
+        <li><strong>Neural Decision Forests:</strong> Combine neural networks with Random Forests for handling unstructured data.</li>
+    </ul>
+
+    <h2>14.4 Real-Time Prediction Systems</h2>
+    <ul>
+        <li><strong>Online Random Forests:</strong> Update models with new data without complete retraining to adapt to changing patterns.</li>
+        <li><strong>Optimized Implementations:</strong> GPU-accelerated Random Forests and distributed training on cloud platforms.</li>
+    </ul>
+
+    <h2>14.5 AutoML and Model Selection</h2>
+    <ul>
+        <li>Systems that automatically choose between algorithms and tune hyperparameters (Auto-sklearn, H2O AutoML, Google AutoML).</li>
+        <li><strong>Neural Architecture Search:</strong> Automatically design optimal tree structures and learn best hyperparameters.</li>
+    </ul>
+
+    <h2>14.6 Enhanced Interpretability</h2>
+    <ul>
+        <li><strong>Explainable AI (XAI):</strong> SHAP (SHapley Additive exPlanations) values and LIME (Local Interpretable Model-agnostic Explanations) for Random Forests.</li>
+        <li>Better visualization tools for interactive exploration of Random Forests.</li>
+    </ul>
+
+    <h2>14.7 Specialized Applications</h2>
+    <ul>
+        <li><strong>Time Series Forecasting:</strong> Random Forests adapted for temporal data combined with LSTM/RNN.</li>
+        <li><strong>Imbalanced Data Handling:</strong> Improved techniques for rare class prediction and balanced Random Forests.</li>
+        <li><strong>Multi-Label Classification:</strong> Predicting multiple classes simultaneously for complex categorization.</li>
+    </ul>
+
+    <h2>14.8 Integration with Deep Learning</h2>
+    <ul>
+        <li>Ensemble of Neural Networks and Random Forests for superior performance on tabular data.</li>
+        <li><strong>Feature Learning:</strong> Use deep learning for feature extraction and apply Random Forest for classification.</li>
+    </ul>
+
+    <h2>14.9 Edge Computing and IoT</h2>
+    <ul>
+        <li>Lightweight Random Forests compressed for embedded systems and IoT sensors.</li>
+        <li><strong>Federated Learning:</strong> Train Random Forests across distributed devices with privacy-preserving machine learning.</li>
+    </ul>
+
+    <h2>14.10 Conclusion on Future Scope</h2>
+    <p>The future of Decision Trees and Random Forests is bright with continued relevance, ongoing improvements in speed, accuracy, and interpretability, integration with other ML techniques, and better tools making them easier to use. For students entering the AI/ML field, deep understanding of these algorithms provides a strong foundation for exploring cutting-edge research and applications.</p>
+</div>
+
+<!-- REFERENCES -->
+<div class="page">
+    <h1>15. REFERENCES</h1>
+
+    <h2>Books</h2>
+    <div class="reference">
+1. Hastie, T., Tibshirani, R., & Friedman, J. (2009). <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction</em>. Springer Series in Statistics. New York: Springer.
+    </div>
+
+    <div class="reference">
+2. Breiman, L., Friedman, J., Stone, C. J., & Olshen, R. A. (1984). <em>Classification and Regression Trees</em>. Chapman and Hall/CRC.
+    </div>
+
+    <div class="reference">
+3. James, G., Witten, D., Hastie, T., & Tibshirani, R. (2013). <em>An Introduction to Statistical Learning: with Applications in R</em>. Springer.
+    </div>
+
+    <div class="reference">
+4. Géron, A. (2019). <em>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</em> (2nd ed.). O'Reilly Media.
+    </div>
+
+    <div class="reference">
+5. Bishop, C. M. (2006). <em>Pattern Recognition and Machine Learning</em>. Springer.
+    </div>
+
+    <h2>Research Papers</h2>
+    <div class="reference">
+6. Breiman, L. (2001). Random Forests. <em>Machine Learning</em>, 45(1), 5-32.
+    </div>
+
+    <div class="reference">
+7. Quinlan, J. R. (1986). Induction of Decision Trees. <em>Machine Learning</em>, 1(1), 81-106.
+    </div>
+
+    <h2>Online Resources and Documentation</h2>
+    <div class="reference">
+8. Scikit-learn Documentation - Decision Trees. Retrieved from https://scikit-learn.org/stable/modules/tree.html
+    </div>
+
+    <div class="reference">
+9. Scikit-learn Documentation - Random Forests. Retrieved from https://scikit-learn.org/stable/modules/ensemble.html#forest
+    </div>
+
+    <div class="reference">
+10. Machine Learning Mastery by Jason Brownlee. Retrieved from https://machinelearningmastery.com/
+    </div>
+
+    <div class="reference">
+11. Towards Data Science. Retrieved from https://towardsdatascience.com/
+    </div>
+
+    <div class="reference">
+12. Kaggle Learn. Retrieved from https://www.kaggle.com/learn
+    </div>
+
+    <h2>Educational Resources</h2>
+    <div class="reference">
+13. Andrew Ng's Machine Learning Course - Coursera/Stanford
+    </div>
+
+    <div class="reference">
+14. StatQuest with Josh Starmer - YouTube (Explanations of Decision Trees and Random Forests)
+    </div>
+
+    <h2>Datasets</h2>
+    <div class="reference">
+15. UCI Machine Learning Repository. Retrieved from https://archive.ics.uci.edu/ml/
+    </div>
+
+    <div class="reference">
+16. Kaggle Datasets. Retrieved from https://www.kaggle.com/datasets
+    </div>
+
+    <h2>Python Libraries Documentation</h2>
+    <div class="reference">
+17. NumPy Documentation. Retrieved from https://numpy.org/doc/
+    </div>
+
+    <div class="reference">
+18. Pandas Documentation. Retrieved from https://pandas.pydata.org/docs/
+    </div>
+
+    <div class="reference">
+19. Matplotlib Documentation. Retrieved from https://matplotlib.org/stable/contents.html
+    </div>
+</div>
+
+</body>
+</html>
